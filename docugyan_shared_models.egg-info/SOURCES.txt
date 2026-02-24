@@ -1,0 +1,11 @@
+setup.py
+docu_model/__init__.py
+docu_model/apps.py
+docu_model/migrations/__init__.py
+docu_model/models/DocuAgent.py
+docu_model/models/__init__.py
+docugyan_shared_models.egg-info/PKG-INFO
+docugyan_shared_models.egg-info/SOURCES.txt
+docugyan_shared_models.egg-info/dependency_links.txt
+docugyan_shared_models.egg-info/requires.txt
+docugyan_shared_models.egg-info/top_level.txt
