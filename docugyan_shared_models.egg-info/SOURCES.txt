@@ -1,6 +1,7 @@
 setup.py
 docu_model/__init__.py
 docu_model/apps.py
+docu_model/migrations/0001_initial.py
 docu_model/migrations/__init__.py
 docu_model/models/DocuAgent.py
 docu_model/models/__init__.py
