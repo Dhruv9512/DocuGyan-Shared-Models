@@ -9,10 +9,9 @@ class DocuProcess(models.Model):
 
     project_id = models.CharField(max_length=50, unique=True, primary_key=True) 
     
-    user_uuid = models.CharField(
-        max_length=255, 
-        db_index=True, 
-        blank=True, 
+    user_uuid = models.UUIDField(
+        db_index=True,
+        blank=True,
         null=True,
         help_text="The unique ID of the user from the authentication service"
     )
