@@ -58,6 +58,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTH_USER_MODEL = 'docu_model.CustomUser'
+
 ROOT_URLCONF = 'DocuGyanSharedModel.urls'
 
 TEMPLATES = [
