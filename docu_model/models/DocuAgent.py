@@ -1,4 +1,6 @@
 from django.db import models
+import uuid
+
 
 class DocuProcess(models.Model):
     # ==========================================
@@ -18,7 +20,11 @@ class DocuProcess(models.Model):
     # ==========================================
     # Core Identifiers
     # ==========================================
-    project_id = models.UUIDField(unique=True, primary_key=True,editable=False) 
+    project_id = models.UUIDField(
+        primary_key=True, 
+        default=uuid.uuid4, 
+        editable=False
+    )
     
     user_uuid = models.UUIDField(
         db_index=True,
