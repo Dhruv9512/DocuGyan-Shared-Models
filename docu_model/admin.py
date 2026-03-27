@@ -17,7 +17,6 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ('email', 'first_name', 'last_name', 'user_uuid')
     readonly_fields = ('user_uuid', 'last_login', 'date_joined')
 
-    # Defines how the edit form is structured (removed 'username')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'user_uuid')}),
@@ -27,7 +26,6 @@ class CustomUserAdmin(UserAdmin):
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
 
-    # Defines how the "Add User" form is structured (removed 'username')
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
@@ -42,9 +40,13 @@ class DocuProcessAdmin(admin.ModelAdmin):
     Admin panel for the DocuProcess model.
     Organizes pipeline steps into clean, collapsible sections.
     """
-    list_display = ('project_id', 'status', 'ingestion_strategy', 'user_uuid', 'created_at', 'updated_at')
+    # Added collection_name to the list display so you can easily see where data is stored
+    list_display = ('project_id', 'status', 'ingestion_strategy', 'collection_name', 'user_uuid', 'created_at', 'updated_at')
+    
     list_filter = ('status', 'ingestion_strategy', 'created_at')
-    search_fields = ('project_id', 'user_uuid', 'task_id', 'error_message')
+    
+    # Added collection_name to search fields so you can search by Vector DB namespace
+    search_fields = ('project_id', 'user_uuid', 'task_id', 'collection_name', 'error_message')
     
     # Core identifiers and timestamps shouldn't be manually edited
     readonly_fields = ('project_id', 'created_at', 'updated_at')
@@ -54,15 +56,16 @@ class DocuProcessAdmin(admin.ModelAdmin):
         ('Core Identifiers', {
             'fields': ('project_id', 'user_uuid', 'task_id', 'status')
         }),
-        ('Phase 1: Inputs', {
+        ('Inputs', {
             'fields': ('reference_urls', 'question_urls'),
             'classes': ('collapse',), 
         }),
-        ('Phase 2: Intermediate Artifacts', {
-            'fields': ('ingestion_strategy', 'extracted_doc_urls', 'refined_question_urls'),
+        ('Intermediate Pipeline Artifacts', {
+            # Included collection_name next to ingestion_strategy
+            'fields': ('ingestion_strategy', 'collection_name', 'extracted_doc_urls', 'refined_question_urls'),
             'classes': ('collapse',),
         }),
-        ('Phase 3: Outputs & Errors', {
+        ('Final Outputs & Errors', {
             'fields': ('results_url', 'error_message'),
         }),
         ('Timestamps', {

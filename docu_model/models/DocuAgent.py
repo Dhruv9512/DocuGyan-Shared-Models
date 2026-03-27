@@ -43,7 +43,7 @@ class DocuProcess(models.Model):
     )
 
     # ==========================================
-    # Phase 1: Inputs
+    # Inputs
     # ==========================================
     reference_urls = models.JSONField(
         default=list, 
@@ -56,7 +56,7 @@ class DocuProcess(models.Model):
     )
 
     # ==========================================
-    # Phase 2: Intermediate Pipeline Artifacts
+    # Intermediate Pipeline Artifacts
     # ==========================================
     extracted_doc_urls = models.JSONField(
         default=list, 
@@ -74,9 +74,15 @@ class DocuProcess(models.Model):
         default=IngestionStrategyChoices.UNKNOWN,
         help_text="How this document was indexed (determines future retrieval options)"
     )
+    collection_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text="Name of the vector DB collection or graph DB namespace where this document is stored"
+    )
 
     # ==========================================
-    # Phase 3: Final Outputs & Errors
+    # Final Outputs & Errors
     # ==========================================
     results_url = models.URLField(
         max_length=500,
