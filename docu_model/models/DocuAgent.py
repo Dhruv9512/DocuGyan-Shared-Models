@@ -18,7 +18,7 @@ class DocuProcess(models.Model):
     # ==========================================
     # Core Identifiers
     # ==========================================
-    project_id = models.CharField(max_length=50, unique=True, primary_key=True) 
+    project_id = models.UUIDField(unique=True, primary_key=True,editable=False) 
     
     user_uuid = models.UUIDField(
         db_index=True,
