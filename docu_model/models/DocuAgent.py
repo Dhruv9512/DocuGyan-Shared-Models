@@ -1,12 +1,23 @@
 from django.db import models
 
 class DocuProcess(models.Model):
+    # ==========================================
+    # Choices Definitions
+    # ==========================================
     class StatusChoices(models.TextChoices):
         PENDING = 'PENDING', 'Pending'
         PROCESSING = 'PROCESSING', 'Processing'
         COMPLETED = 'COMPLETED', 'Completed'
-        FAILED = 'FAILED', 'Failed'
 
+    class IngestionStrategyChoices(models.TextChoices):
+        VECTOR = 'VECTOR', 'Vector DB'
+        GRAPH = 'GRAPH', 'Knowledge Graph'
+        VECTORLESS = 'VECTORLESS', 'Vectorless / Raw Text'
+        UNKNOWN = 'UNKNOWN', 'Unknown'
+
+    # ==========================================
+    # Core Identifiers
+    # ==========================================
     project_id = models.CharField(max_length=50, unique=True, primary_key=True) 
     
     user_uuid = models.UUIDField(
@@ -25,10 +36,42 @@ class DocuProcess(models.Model):
         db_index=True
     )
 
-    reference_urls = models.JSONField(default=list, help_text="List of Vercel Blob URLs for reference docs")
-    question_urls = models.JSONField(default=list, blank=True, help_text="List of Vercel Blob URLs for question docs")
-    text_questions = models.JSONField(default=list, blank=True, help_text="List of text questions")
+    # ==========================================
+    # Phase 1: Inputs
+    # ==========================================
+    reference_urls = models.JSONField(
+        default=list, 
+        help_text="List of Vercel Blob URLs for reference docs"
+    )
+    question_urls = models.JSONField(
+        default=list, 
+        blank=True, 
+        help_text="List of Vercel Blob URLs for question docs"
+    )
 
+    # ==========================================
+    # Phase 2: Intermediate Pipeline Artifacts
+    # ==========================================
+    extracted_doc_urls = models.JSONField(
+        default=list, 
+        blank=True, 
+        help_text="Vercel Blob URLs of the markdown-extracted reference documents"
+    )
+    refined_question_urls = models.JSONField(
+        default=list, 
+        blank=True, 
+        help_text="Vercel Blob URLs of the LLM-refined questions"
+    )
+    ingestion_strategy = models.CharField(
+        max_length=20,
+        choices=IngestionStrategyChoices.choices,
+        default=IngestionStrategyChoices.UNKNOWN,
+        help_text="How this document was indexed (determines future retrieval options)"
+    )
+
+    # ==========================================
+    # Phase 3: Final Outputs & Errors
+    # ==========================================
     results_url = models.URLField(
         max_length=500,
         blank=True, 
@@ -37,11 +80,13 @@ class DocuProcess(models.Model):
     )
     error_message = models.TextField(blank=True, null=True)
 
-    metadata = models.JSONField(default=dict, blank=True, help_text="Execution metadata, token usage, time taken")
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    # ==========================================
+    # Model Methods & Meta
+    # ==========================================
     def __str__(self):
         return f"{self.project_id} - {self.status}"
 
