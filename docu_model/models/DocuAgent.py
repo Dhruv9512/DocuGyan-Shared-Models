@@ -80,6 +80,9 @@ class DocuProcess(models.Model):
         null=True,
         help_text="Name of the vector DB collection or graph DB namespace where this document is stored"
     )
+    title = models.CharField(max_length=255, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+
 
     # ==========================================
     # Final Outputs & Errors
