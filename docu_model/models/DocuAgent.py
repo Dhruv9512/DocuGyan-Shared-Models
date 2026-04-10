@@ -9,7 +9,9 @@ class DocuProcess(models.Model):
     class StatusChoices(models.TextChoices):
         PENDING = 'PENDING', 'Pending'
         PROCESSING = 'PROCESSING', 'Processing'
-        COMPLETED = 'COMPLETED', 'Completed'
+        COMPLETED = 'COMPLETED', 'Completed',
+        FAILED = 'FAILED', 'Failed'
+        
 
     class IngestionStrategyChoices(models.TextChoices):
         VECTOR = 'VECTOR', 'Vector DB'
