@@ -41,9 +41,9 @@ class DocuProcessAdmin(admin.ModelAdmin):
     Organizes pipeline steps into clean, collapsible sections.
     """
     # Added collection_name to the list display so you can easily see where data is stored
-    list_display = ('project_id', 'status', 'title', 'description', 'ingestion_strategy', 'collection_name', 'user_uuid', 'created_at', 'updated_at')
+    list_display = ('project_id', 'status', 'title', 'description', 'ingestion_strategy', 'collection_name', 'grooming_data','user_uuid', 'created_at', 'updated_at')
     
-    list_filter = ('status', 'ingestion_strategy', 'created_at')
+    list_filter = ('status', 'collection_name', 'created_at')
     
     # Added collection_name to search fields so you can search by Vector DB namespace
     search_fields = ('project_id', 'user_uuid', 'task_id', 'collection_name', 'error_message', 'title', 'description')

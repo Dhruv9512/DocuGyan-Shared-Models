@@ -44,6 +44,12 @@ class DocuProcess(models.Model):
         db_index=True
     )
 
+    grooming_data = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Optional field to store grooming data from graph of DocuAgent"
+    )
+    
     # ==========================================
     # Inputs
     # ==========================================
