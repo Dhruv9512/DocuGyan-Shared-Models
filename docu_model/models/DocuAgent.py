@@ -10,7 +10,9 @@ class DocuProcess(models.Model):
         PENDING = 'PENDING', 'Pending'
         PROCESSING = 'PROCESSING', 'Processing'
         COMPLETED = 'COMPLETED', 'Completed',
-        FAILED = 'FAILED', 'Failed'
+        FAILED = 'FAILED', 'Failed',
+        DELETING = 'DELETING', 'Deleting', 
+        DELETED = 'DELETED', 'Deleted'
         
 
     class IngestionStrategyChoices(models.TextChoices):
