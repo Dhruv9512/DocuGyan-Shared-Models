@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from .models import CustomUser, DocuProcess
+from .models import CustomUser, DocuProcess, ChatSession, ChatMessage
 
 
 @admin.register(CustomUser)
@@ -73,3 +73,73 @@ class DocuProcessAdmin(admin.ModelAdmin):
             'classes': ('collapse',),
         }),
     )
+
+
+@admin.register(ChatSession)
+class ChatSessionAdmin(admin.ModelAdmin):
+    # Removed thread_id
+    list_display = (
+        'session_id', 
+        'title', 
+        'project', 
+        'user', 
+        'created_at'
+    )
+    
+    list_filter = ('created_at', 'project')
+    
+    search_fields = (
+        'session_id', 
+        'title', 
+        'user__email', 
+        'project__project_id'
+    )
+    
+    # Removed the duplicate 'session_id'
+    readonly_fields = ('session_id', 'created_at')
+    
+    ordering = ('-created_at',)
+
+    # Removed the "LangGraph Internal" section and merged the concept
+    fieldsets = (
+        ('Session Details (LangGraph Thread)', {
+            'fields': ('session_id', 'title', 'created_at')
+        }),
+        ('Relationships', {
+            'fields': ('project', 'user')
+        }),
+    )
+
+@admin.register(ChatMessage)
+class ChatMessageAdmin(admin.ModelAdmin):
+    # 1. Update display to show both sides of the conversation
+    list_display = ('message_id', 'session', 'user_query_preview', 'assistant_response_preview', 'created_at')
+    
+    # 2. Remove 'role' filter as it no longer exists
+    list_filter = ('created_at',)
+    
+    # 3. Update search to look through both query and response
+    search_fields = ('message_id', 'session__session_id', 'user_query', 'assistant_response')
+    
+    readonly_fields = ('message_id', 'created_at')
+    
+    # Optional: Change to '-created_at' to see the newest chats at the top
+    ordering = ('-created_at',) 
+
+    fieldsets = (
+        ('Conversation Turn', {
+            'fields': ('message_id', 'user_query', 'assistant_response', 'created_at')
+        }),
+        ('Relationships', {
+            'fields': ('session',)
+        }),
+    )
+
+    # Helper methods to keep the list view clean
+    def user_query_preview(self, obj):
+        return obj.user_query[:50] + "..." if len(obj.user_query) > 50 else obj.user_query
+    user_query_preview.short_description = 'User Query'
+
+    def assistant_response_preview(self, obj):
+        return obj.assistant_response[:50] + "..." if len(obj.assistant_response) > 50 else obj.assistant_response
+    assistant_response_preview.short_description = 'Assistant Response'
